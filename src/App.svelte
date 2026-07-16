@@ -3,6 +3,8 @@ import Devider from "./components/Devider.svelte";
 import Stack from "./components/Stack.svelte";
 import WorkItem from "./components/WorkItem.svelte";
 import BlurFade from "./components/BlurFade.svelte";
+import NumberTicker from "./components/NumberTicker.svelte";
+
 function bangladeshTime(): string {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Dhaka",
@@ -13,10 +15,12 @@ function bangladeshTime(): string {
 }
 
 let time: string = bangladeshTime();
-setInterval(() => (time = bangladeshTime()), 1000);
+setInterval(() => {
+  time = bangladeshTime();
+}, 1000);
 const works = [
   {
-    year: "2026",
+    year: 2026,
     items: [
       {
         description: "Bangladesh SaaS directory",
@@ -49,7 +53,7 @@ const works = [
     <h1 class="mt-[50px] lg:mt-[100px] font-medium">Ishtiaq Dishan</h1>
   </BlurFade>
   <BlurFade>
-    <p class="opacity-50">Updated 16 Jul 2026</p>
+    <p class="opacity-50">Updated <NumberTicker value={16}/> Jul <NumberTicker value={2026} /></p>
   </BlurFade>
 
   <BlurFade>

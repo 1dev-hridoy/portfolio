@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let year = "";
+  export let year = 0;
   export let items: {
     description: string;
     href?: string;
