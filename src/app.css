@@ -11,28 +11,49 @@ html {
 
 body {
   margin: 0;
-  background-color: FBFAF9;
+  background-color: #fbfaf9;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  color: #1a1a1a;
 }
 
-.name{
+.name {
   font-family: "Geist Mono", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
-.link{
+
+.link {
   border-bottom: 1px solid rgb(0 0 0 / 0.3);
   transition: border-color 0.2s ease, opacity 0.2s ease;
 }
 
-.link:hover{
+.link:hover {
   border-bottom-color: rgb(0 0 0 / 0.8);
   opacity: 0.7;
 }
 
-
 ::selection {
   background-color: #2563eb;
   color: #fff;
+}
+
+.section-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(0 0 0 / 0.5);
+  font-weight: 500;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

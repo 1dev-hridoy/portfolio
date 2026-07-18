@@ -1,24 +1,28 @@
 <script lang="ts">
+import { onMount } from "svelte";
 import Devider from "./components/Devider.svelte";
 import Stack from "./components/Stack.svelte";
 import WorkItem from "./components/WorkItem.svelte";
 import BlurFade from "./components/BlurFade.svelte";
 import NumberTicker from "./components/NumberTicker.svelte";
+import Skeleton from "./components/Skeleton.svelte";
+import ContributionGraph from "./components/ContributionGraph.svelte";
+import NotFound from "./pages/NotFound.svelte";
+import ServerError from "./pages/ServerError.svelte";
 import { slotText } from "slot-text/svelte";
 import "slot-text/style.css";
 
-let copied = false
+let page = $state("home");
+let loading = $state(true);
 
-function copyEmail() {
-  const email = "dishanishtiaq45@gmail.com"; // Replace with your actual email
-  navigator.clipboard.writeText(email);
-  copied = true;
-  setTimeout(() => {
-    copied = false;
-  }, 2000);
+function goHome() {
+  page = "home";
+  loading = true;
+  history.pushState({}, "", "/");
+  setTimeout(() => { loading = false; }, 600);
 }
 
-function bangladeshTime(): string {
+function dhakaTime(): string {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Dhaka",
     hour: "numeric",
@@ -27,76 +31,141 @@ function bangladeshTime(): string {
   }).format(new Date());
 }
 
-let time: string = bangladeshTime();
-setInterval(() => {
-  time = bangladeshTime();
-}, 1000);
-const works = [
+let time = $state(dhakaTime());
+let copied = $state(false);
+
+function copyEmail() {
+  const email = "hridoy@hridoyxqc.space";
+  navigator.clipboard.writeText(email);
+  copied = true;
+  setTimeout(() => { copied = false; }, 2000);
+}
+
+const projects = [
   {
     year: 2026,
     items: [
       {
-        description: "Bangladesh SaaS directory",
-        href: "https://www.bdsaaszone.site/",
-        category: "Platform",
+        description: "Messenger bot for fun & SimSim talk",
+        href: "https://github.com/1dev-hridoy/NexaSim-v2",
+        category: "Messenger Bot",
       },
       {
-        description: "Student management system",
-        href: "https://www.studify.sbs/",
-        category: "SaaS",
+        description: "Feature-rich Facebook Messenger bot",
+        href: "https://github.com/1dev-hridoy/Messenger-NexaloSIM-Bot",
+        category: "Messenger Bot",
       },
       {
-        description: "Open source monitoring tool",
-        href: "https://github.com/dishan1223/mutt",
-        category: "Open Source",
+        description: "Powerful Node.js Telegram bot",
+        href: "https://github.com/1dev-hridoy/Nexalo",
+        category: "Telegram Bot",
       },
       {
-        description: "Developer portfolio site",
-        href: "/",
-        category: "Portfolio",
+        description: "Facebook Messenger bot with media tools",
+        href: "https://github.com/1dev-hridoy/Kenji-Cloud",
+        category: "Messenger Bot",
       }
     ],
   },
 ];
+
+onMount(() => {
+  const path = location.pathname.slice(1);
+  if (path && path !== "") {
+    page = "404";
+    return;
+  }
+
+  window.onerror = () => { page = "500"; };
+  window.addEventListener("unhandledrejection", () => { page = "500"; });
+
+  setTimeout(() => { loading = false; }, 600);
+  setInterval(() => { time = dhakaTime(); }, 1000);
+});
 </script>
 
-<main class="mx-auto w-[90%] max-w-[560px] mb-10 page-reveal">
+{#if page === "404"}
+  <main class="mx-auto w-[90%] max-w-[560px] mb-10">
+    <NotFound onHome={goHome} />
+  </main>
+{:else if page === "500"}
+  <main class="mx-auto w-[90%] max-w-[560px] mb-10">
+    <ServerError onHome={goHome} />
+  </main>
+{:else}
+  <main class="mx-auto w-[90%] max-w-[560px] mb-10 page-reveal">
+    {#if loading}
+      <div class="mt-[50px] lg:mt-[100px]">
+        <Skeleton width="200px" height="32px" borderRadius="4px" />
+        <div class="mt-2"><Skeleton width="140px" height="16px" borderRadius="4px" /></div>
+        <div class="mt-6"><Skeleton width="100%" height="14px" count={3} /></div>
+        <div class="mt-6"><Skeleton width="100%" height="14px" count={4} /></div>
+        <div class="mt-6"><Skeleton width="100%" height="14px" count={2} /></div>
+      </div>
+    {:else}
+      <BlurFade>
+        <div class="w-full rounded-lg overflow-hidden mt-[50px] lg:mt-[100px] mb-6">
+          <img
+            src="https://i.pinimg.com/1200x/f1/a8/dd/f1a8dd69a469a0acb281d761aca2a70c.jpg"
+            alt="Cover"
+            class="w-full h-[170px] object-cover"
+          />
+        </div>
+      </BlurFade>
+      <BlurFade>
+        <h1 class="font-medium name">Mohammed Hridoy</h1>
+        <p class="mt-1 opacity-60">Full-Stack Developer & AI Architect</p>
+      </BlurFade>
+      <BlurFade>
+        <p class="opacity-50">Updated <NumberTicker value={18}/> Jul <NumberTicker value={2026} /></p>
+      </BlurFade>
 
-  <BlurFade>
-    <h1 class="mt-[50px] lg:mt-[100px] font-medium name">Ishtiaq Dishan</h1>
-  </BlurFade>
-  <BlurFade>
-    <p class="opacity-50">Updated <NumberTicker value={16}/> Jul <NumberTicker value={2026} /></p>
-  </BlurFade>
+      <BlurFade>
+        <p class="mt-6">Full-stack dev from Dhaka, Bangladesh. I build bots, break code, and vibe with JavaScript. Currently expanding my skills in Python and exploring new technologies.</p>
 
-  <BlurFade>
-    <p class="mt-6">I'm a full-stack web developer from Sirajganj, Bangladesh, and a Class 12 student. I love building small, polished products that are simple, useful, and enjoyable to use.</p>
+        <p class="mt-6">I've built projects like <a href="https://github.com/1dev-hridoy/NexaSim-v2"><span class="link">NexaSim</span></a>, <a href="https://github.com/1dev-hridoy/Messenger-NexaloSIM-Bot"><span class="link">NexaloSIM Bot</span></a>, and <a href="https://github.com/1dev-hridoy/Nexalo"><span class="link">Nexalo Telegram Bot</span></a>. I'm passionate about creating useful and enjoyable software, building automation tools, and exploring AI. I also run <a href="https://nexalosim.com"><span class="link">NexaloSIM</span></a>, a community organization.</p>
+      </BlurFade>
 
-    <p class="mt-6">I've built products like <a href="https://www.studify.sbs/"><span class="link">Studify</span></a> and <a href="https://www.bdsaaszone.site/"><span class="link">BD SaaS Zone</span></a>, and I'm currently working on <a href="https://github.com/dishan1223/mutt"><span class="link">Mutt</span></a>, an open-source project. I'm always excited to build useful and enjoyable software while exploring new tools, technologies, and ideas. Beyond coding, I enjoy connecting with experienced developers, learning from their insights, and continuously improving my craft.</p>
+      <BlurFade>
+        <Devider />
+        <h1 class="section-heading mt-6">Tech Stack</h1>
+        <p class="mt-4">I always try to pick the right tools for the job. These are the languages and technologies I use most often.</p>
+        <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Languages : </span> <Stack value="JavaScript"/>, <Stack value="PHP"/>, <Stack value="Python"/>, <Stack value="HTML"/>, <Stack value="CSS"/></p>
+        <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Backend : </span> <Stack value="Node.js" />, <Stack value="ExpressJS" /></p>
+        <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Frontend : </span> <Stack value="jQuery" />, <Stack value="Bootstrap" />, <Stack value="Tailwind" /></p>
+        <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Database : </span> <Stack value="MySQL" />, <Stack value="MongoDB" />, <Stack value="Firebase" /></p>
+        <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Tools : </span> <Stack value="VS Code" />, <Stack value="Notion" /></p>
+      </BlurFade>
 
-    <p class="mt-6">Feel free to say hi on <a href="https://github.com/dishan1223"><span class="link">GitHub</span></a>, <a href="https://x.com/ishtiaqdishan"><span class="link">X</span></a>, <a href="https://www.facebook.com/ishtiaq.dishan"><span class="link">Facebook</span></a>, or <button onclick={copyEmail}><span class="link" use:slotText={{text: copied ? "Copied" : "Email"}}>email</span></button> if you'd like to connect.</p>
-  </BlurFade>
+      <BlurFade>
+        <Devider />
+        <h1 class="section-heading mt-6">Projects</h1>
+        {#each projects as w}
+          <WorkItem year={w.year} items={w.items} />
+        {/each}
+      </BlurFade>
 
-  <BlurFade>
-  <Devider />
-    <h1 class="mt-6 opacity-50">Tech Stack</h1>
-    <p class="mt-4">I always try to pick the right tools for the job. These are the languages and technologies I use most often and enjoy working with.</p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Languages : </span> <Stack value="GO"/>, <Stack value="TypeScript"/>, <Stack value="JavaScript"/></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Backend : </span> <Stack value="GoFiber" />, <Stack value="NestJS" />, <Stack value="ExpressJS" /></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Frontend : </span> <Stack value="React" />, <Stack value="NextJS" />, <Stack value="Svelte" /></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Database : </span> <Stack value="MongoDB" />, <Stack value="NeonDB" />, <Stack value="SQLite" /></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Tools : </span> <Stack value="Git" /></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Design : </span> <Stack value="Figma" /></p>
-    <p class="mt-4 whitespace-nowrap overflow-x-auto"><span class="opacity-50">Productivity : </span> <Stack value="Obsidian" /></p>
-  </BlurFade>
-  <BlurFade >
-    <Devider />
-    <h1 class="mt-6 opacity-50">Work</h1>
-    {#each works as w}
-      <WorkItem year={w.year} items={w.items} />
-    {/each}
+      <BlurFade>
+        <Devider />
+        <h1 class="section-heading mt-6">GitHub</h1>
+        <p class="mt-4 opacity-50 text-sm">Contribution activity</p>
+        <div class="mt-3">
+          <ContributionGraph username="1dev-hridoy" />
+        </div>
+      </BlurFade>
 
-    <Devider />
-    <p class="mt-6">{time} <span class="opacity-50">in Sirajganj, Bangladesh</span></p>
-  </BlurFade>
-</main>
+      <BlurFade>
+        <Devider />
+        <h1 class="section-heading mt-6">Connect</h1>
+        <p class="mt-4">Feel free to reach out! I'm always open to collaborating on interesting projects or just having a chat.</p>
+        <p class="mt-4">Find me on <a href="https://github.com/1dev-hridoy"><span class="link">GitHub</span></a>, <a href="https://www.facebook.com/hridoy.py"><span class="link">Facebook</span></a>, <a href="https://www.instagram.com/hridoy.py"><span class="link">Instagram</span></a>, <a href="https://www.youtube.com/@hridoy-code"><span class="link">YouTube</span></a>, or send me an <button onclick={copyEmail}><span class="link" use:slotText={{text: copied ? "Copied" : "Email"}}>email</span></button>.</p>
+        <p class="mt-4">You can also support my work on <a href="https://www.buymeacha.com/hridoy"><span class="link">Buy Me a Cha</span></a>.</p>
+      </BlurFade>
+
+      <BlurFade>
+        <Devider />
+        <p class="mt-6">{time} <span class="opacity-50">in Dhaka, Bangladesh</span></p>
+      </BlurFade>
+    {/if}
+  </main>
+{/if}
