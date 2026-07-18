@@ -41,30 +41,18 @@ function copyEmail() {
   setTimeout(() => { copied = false; }, 2000);
 }
 
-const projects = [
+const works = [
   {
     year: 2026,
     items: [
-      {
-        description: "Messenger bot for fun & SimSim talk",
-        href: "https://github.com/1dev-hridoy/NexaSim-v2",
-        category: "Messenger Bot",
-      },
-      {
-        description: "Feature-rich Facebook Messenger bot",
-        href: "https://github.com/1dev-hridoy/Messenger-NexaloSIM-Bot",
-        category: "Messenger Bot",
-      },
-      {
-        description: "Powerful Node.js Telegram bot",
-        href: "https://github.com/1dev-hridoy/Nexalo",
-        category: "Telegram Bot",
-      },
-      {
-        description: "Facebook Messenger bot with media tools",
-        href: "https://github.com/1dev-hridoy/Kenji-Cloud",
-        category: "Messenger Bot",
-      }
+      { description: "BuyMeACha", href: "https://buymeacha.com/", category: "Platform" },
+      { description: "TukroAI", href: "https://www.tukroai.online/", category: "AI" },
+      { description: "Clave-App", href: "https://clave-app.onrender.com/", category: "Open Source" },
+      { description: "PixelForge", href: "https://www.pixelforge.giize.com", category: "Boilerplate" },
+      { description: "AI Girlfriend CLI Chat", href: "https://github.com/1dev-hridoy/cli-gf", category: "CLI" },
+      { description: "TextBehind", href: "#", category: "Tool" },
+      { description: "TextCraft AI - WP Plugin", href: "https://github.com/1dev-hridoy/TextCraft-AI", category: "Plugin" },
+      { description: "NexaSim-v2", href: "https://github.com/1dev-hridoy/NexaSim-v2", category: "Bot" },
     ],
   },
 ];
@@ -140,7 +128,7 @@ onMount(() => {
       <BlurFade>
         <Devider />
         <h1 class="section-heading mt-6">Projects</h1>
-        {#each projects as w}
+        {#each works as w}
           <WorkItem year={w.year} items={w.items} />
         {/each}
       </BlurFade>

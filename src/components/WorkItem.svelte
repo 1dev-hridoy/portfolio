@@ -1,10 +1,5 @@
 <script lang="ts">
-  export let year = 0;
-  export let items: {
-    description: string;
-    href?: string;
-    category: string;
-  }[] = [];
+  let { year = 0, items = [] as { description: string; href?: string; category: string }[] } = $props();
 </script>
 
 <div class="mt-5 flex justify-between gap-8">
