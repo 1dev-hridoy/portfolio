@@ -11,6 +11,13 @@ import NotFound from "./pages/NotFound.svelte";
 import ServerError from "./pages/ServerError.svelte";
 import { slotText } from "slot-text/svelte";
 import "slot-text/style.css";
+import coverImage from "./assets/hridoyXQC.jpg";
+import CertificateCard from "./components/CertificateCard.svelte";
+import CertificateLightbox from "./components/CertificateLightbox.svelte";
+import AmbientBackground from "./components/AmbientBackground.svelte";
+import { certificates, type Certificate } from "./lib/certificates";
+
+let activeCertificate = $state<Certificate | null>(null);
 
 let page = $state("home");
 let loading = $state(true);
@@ -45,6 +52,7 @@ const works = [
   {
     year: 2026,
     items: [
+      { description: "Wass", href: "https://wass.website/", category: "Assistant" },
       { description: "BuyMeACha", href: "https://buymeacha.com/", category: "Platform" },
       { description: "TukroAI", href: "https://www.tukroai.online/", category: "AI" },
       { description: "Clave-App", href: "https://clave-app.onrender.com/", category: "Open Source" },
@@ -81,6 +89,7 @@ onMount(() => {
     <ServerError onHome={goHome} />
   </main>
 {:else}
+  <AmbientBackground />
   <main class="mx-auto w-[90%] max-w-[560px] mb-10 page-reveal">
     {#if loading}
       <div class="mt-[50px] lg:mt-[100px]">
@@ -92,11 +101,11 @@ onMount(() => {
       </div>
     {:else}
       <BlurFade>
-        <div class="w-full rounded-lg overflow-hidden mt-[50px] lg:mt-[100px] mb-6">
+        <div class="cover-mat relative w-full rounded-lg overflow-hidden mt-[50px] lg:mt-[100px] mb-6">
           <img
-            src="https://i.pinimg.com/1200x/f1/a8/dd/f1a8dd69a469a0acb281d761aca2a70c.jpg"
+            src={coverImage}
             alt="Cover"
-            class="w-full h-[170px] object-cover"
+            class="relative w-full h-[170px] object-cover"
           />
         </div>
       </BlurFade>
@@ -134,6 +143,17 @@ onMount(() => {
       </BlurFade>
 
       <BlurFade>
+        <Devider accent />
+        <h1 class="section-heading mt-6">Certificates</h1>
+        <p class="mt-4">A few things I've earned along the way &mdash; hackathons, community programs, and volunteer work.</p>
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {#each certificates as certificate}
+            <CertificateCard {certificate} onOpen={(c) => (activeCertificate = c)} />
+          {/each}
+        </div>
+      </BlurFade>
+
+      <BlurFade>
         <Devider />
         <h1 class="section-heading mt-6">GitHub</h1>
         <p class="mt-4 opacity-50 text-sm">Contribution activity</p>
@@ -151,9 +171,64 @@ onMount(() => {
       </BlurFade>
 
       <BlurFade>
-        <Devider />
-        <p class="mt-6">{time} <span class="opacity-50">in Dhaka, Bangladesh</span></p>
+        <div class="signoff mt-6">
+          <p>{time} <span class="opacity-50">in Dhaka, Bangladesh</span></p>
+        </div>
       </BlurFade>
+
+      <CertificateLightbox certificate={activeCertificate} onClose={() => (activeCertificate = null)} />
     {/if}
   </main>
 {/if}
+
+<style>
+  /*
+   * The cover sits in a thin gradient mat cut from bg1 (sky blue -> warm
+   * earth), so the photo reads as mounted rather than pasted on the page.
+   */
+  .cover-mat {
+    padding: 3px;
+    background-image: linear-gradient(135deg, #b0d4eb 0%, #d8e3e9 45%, #a59e8d 100%);
+    background-size: 200% 200%;
+    animation: mat-shift 18s ease-in-out infinite alternate;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(70 90 110 / 0.35);
+  }
+
+  .cover-mat img {
+    border-radius: 6px;
+  }
+
+  @keyframes mat-shift {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cover-mat {
+      animation: none;
+    }
+  }
+
+  /*
+   * Closing band: bg2's deep green/blue end fades up from the bottom edge,
+   * giving the page a grounded finish instead of just stopping.
+   */
+  .signoff {
+    position: relative;
+    padding-top: 1.5rem;
+  }
+
+  .signoff::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-image: linear-gradient(90deg, #b8cee1 0%, #d6d9f7 50%, #e7cceb 100%);
+  }
+</style>
