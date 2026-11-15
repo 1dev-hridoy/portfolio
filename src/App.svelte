@@ -42,7 +42,7 @@ let time = $state(dhakaTime());
 let copied = $state(false);
 
 function copyEmail() {
-  const email = "hridoy@hridoyxqc.space";
+  const email = "hridoy@scriptysphere.org";
   navigator.clipboard.writeText(email);
   copied = true;
   setTimeout(() => { copied = false; }, 2000);
